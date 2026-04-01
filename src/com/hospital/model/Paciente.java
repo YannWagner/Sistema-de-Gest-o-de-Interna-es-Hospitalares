@@ -1,5 +1,8 @@
 package com.hospital.model;
-public class Paciente {
+import java.io.Serializable;
+
+public class Paciente implements Serializable {
+    private static final long serialVersionUID = 1L;
     private String nome;
     private String cpf;
     private String telefone;
@@ -27,30 +30,13 @@ public class Paciente {
 
     private boolean ehApenasNumero(String texto) {
         for (int i = 0; i < texto.length(); i++) {
-            if (!Character.isDigit(texto.charAt(i))) {
-                return false;
-            }
+            if (!Character.isDigit(texto.charAt(i))) return false;
         }
         return true;
     }
 
-    public String getNome() {
-        return nome;
-    }
-
-    public String getCpf() {
-        return cpf;
-    }
-
-    public String getTelefone() {
-        return telefone;
-    }
-
-    public PlanoDeSaude getPlanoDeSaude() {
-        return planoDeSaude;
-    }
-
-    public void setPlanoDeSaude(PlanoDeSaude planoDeSaude) {
-        this.planoDeSaude = planoDeSaude;
-    }
+    public String getNome() { return nome; }
+    public String getCpf() { return cpf; }
+    public PlanoDeSaude getPlanoDeSaude() { return planoDeSaude; }
+    public void setPlanoDeSaude(PlanoDeSaude planoDeSaude) { this.planoDeSaude = planoDeSaude; }
 }

@@ -1,6 +1,7 @@
 package com.hospital.model;
+import java.io.Serializable;
 
-public enum Especialidade {
+public enum Especialidade implements Serializable {
     CLINICA_MEDICA_GERAL,
     CARDIOLOGIA,
     GERIATRIA,

@@ -2,35 +2,53 @@ package com.hospital.model;
 
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.time.LocalDate;
 
 public class MainTeste {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        GerenciadorDePacientes gerenciadorPacientes = new GerenciadorDePacientes();
-        GerenciadorDeMedicos gerenciadorMedicos = new GerenciadorDeMedicos();
+
+        // Tenta carregar os dados salvos anteriormente
+        Hospital hospital = Hospital.carregarHospital("hospital.ser");
+        if (hospital == null) {
+            hospital = new Hospital();
+        }
+
+        // Puxa os gerenciadores de dentro do Hospital (para persistência funcionar)
+        GerenciadorDePacientes gerenciadorPacientes = hospital.getGerenciadorPacientes();
+        GerenciadorDeMedicos gerenciadorMedicos = hospital.getGerenciadorMedicos();
 
         boolean rodando = true;
 
-        System.out.println("BEM-VINDO AO SISTEMA HOSPITALAR");
+        System.out.println("BEM-VINDO AO SISTEMA HOSPITALAR 2026");
 
         while (rodando) {
             System.out.println("\n=== MENU PRINCIPAL ===");
             System.out.println("1. Modulo de PACIENTES");
             System.out.println("2. Modulo de MEDICOS");
-            System.out.println("3. Sair do Sistema");
+            System.out.println("3. Modulo de INTERNACOES E ALTAS");
+            System.out.println("4. Gerar Relatorio Financeiro (TXT)");
+            System.out.println("5. Sair e Salvar Sistema");
             System.out.print("Escolha uma opcao: ");
 
             String opcao = scanner.nextLine();
 
             switch (opcao) {
                 case "1":
-                    menuPacientes(scanner, gerenciadorPacientes);
+                    menuPacientes(scanner, gerenciadorPacientes, hospital);
                     break;
                 case "2":
-                    menuMedicos(scanner, gerenciadorMedicos);
+                    menuMedicos(scanner, gerenciadorMedicos, hospital);
                     break;
                 case "3":
-                    System.out.println("Encerrando o sistema. Ate logo!");
+                    menuInternacoes(scanner, hospital);
+                    break;
+                case "4":
+                    hospital.getGerenciadorPagamentos().gerarRelatorioFinanceiroTXT();
+                    break;
+                case "5":
+                    System.out.println("Salvando dados e encerrando. Ate logo!");
+                    hospital.salvarHospital("hospital.ser");
                     rodando = false;
                     break;
                 default:
@@ -39,7 +57,8 @@ public class MainTeste {
         }
         scanner.close();
     }
-    private static void menuPacientes(Scanner scanner, GerenciadorDePacientes gerenciador) {
+
+    private static void menuPacientes(Scanner scanner, GerenciadorDePacientes gerenciador, Hospital hospital) {
         boolean noMenuPaciente = true;
         while (noMenuPaciente) {
             System.out.println("\n-- MODULO DE PACIENTES --");
@@ -75,6 +94,7 @@ public class MainTeste {
 
                     try {
                         gerenciador.cadastrarPaciente(nome, cpf, telefone, plano);
+                        hospital.salvarHospital("hospital.ser"); // Salva alteração
                         System.out.println("> Paciente cadastrado com sucesso!");
                     } catch (IllegalArgumentException e) {
                         System.out.println("> ERRO: " + e.getMessage());
@@ -102,6 +122,7 @@ public class MainTeste {
 
                     try {
                         gerenciador.atualizarPlanoDeSaude(cpfAtualizar, new PlanoDeSaude(novaOp, novoLeito, novaCopart));
+                        hospital.salvarHospital("hospital.ser"); // Salva alteração
                         System.out.println("> Plano atualizado!");
                     } catch (IllegalArgumentException e) {
                         System.out.println("> ERRO: " + e.getMessage());
@@ -115,7 +136,8 @@ public class MainTeste {
             }
         }
     }
-    private static void menuMedicos(Scanner scanner, GerenciadorDeMedicos gerenciador) {
+
+    private static void menuMedicos(Scanner scanner, GerenciadorDeMedicos gerenciador, Hospital hospital) {
         boolean noMenuMedico = true;
         while (noMenuMedico) {
             System.out.println("\n-- MODULO DE MEDICOS --");
@@ -156,6 +178,7 @@ public class MainTeste {
 
                     try {
                         gerenciador.cadastrarMedico(nome, crm, especialidade);
+                        hospital.salvarHospital("hospital.ser"); // Salva alteração
                         System.out.println("> Medico cadastrado com sucesso!");
                     } catch (IllegalArgumentException e) {
                         System.out.println("> ERRO: " + e.getMessage());
@@ -188,6 +211,7 @@ public class MainTeste {
                     String crmRemover = scanner.nextLine();
                     try {
                         gerenciador.removerMedico(crmRemover);
+                        hospital.salvarHospital("hospital.ser"); // Salva alteração
                         System.out.println("> Medico inativado com sucesso!");
                     } catch (IllegalArgumentException e) {
                         System.out.println("> ERRO: " + e.getMessage());
@@ -195,6 +219,66 @@ public class MainTeste {
                     break;
                 case "5":
                     noMenuMedico = false;
+                    break;
+                default:
+                    System.out.println("Opcao invalida!");
+            }
+        }
+    }
+
+    private static void menuInternacoes(Scanner scanner, Hospital hospital) {
+        boolean noMenuInter = true;
+        while (noMenuInter) {
+            System.out.println("\n-- MODULO DE INTERNACOES E ALTAS --");
+            System.out.println("1. Registrar nova internacao");
+            System.out.println("2. Registrar alta e pagamento");
+            System.out.println("3. Voltar ao Menu Principal");
+            System.out.print("Escolha: ");
+            String op = scanner.nextLine();
+
+            switch (op) {
+                case "1":
+                    System.out.print("CPF do Paciente: ");
+                    Paciente p = hospital.getGerenciadorPacientes().buscarPaciente(scanner.nextLine());
+                    System.out.print("CRM do Medico: ");
+                    Medico m = hospital.getGerenciadorMedicos().buscarMedico(scanner.nextLine());
+
+                    if (p == null || m == null) {
+                        System.out.println("> ERRO: Paciente ou Medico nao encontrado!");
+                    } else {
+                        System.out.println("Tipo de Leito: 1-ENFERMARIA 2-APARTAMENTO 3-UTI");
+                        int t = Integer.parseInt(scanner.nextLine());
+                        TipoLeito tl = (t == 2) ? TipoLeito.APARTAMENTO : (t == 3) ? TipoLeito.UTI : TipoLeito.ENFERMARIA;
+                        System.out.print("Localizacao (Quarto/Ala): ");
+                        String local = scanner.nextLine();
+                        try {
+                            hospital.getGerenciadorInternacoes().registrarInternacao(p, m, tl, local, LocalDate.now());
+                            hospital.salvarHospital("hospital.ser");
+                            System.out.println("> Internacao registrada!");
+                        } catch (Exception e) {
+                            System.out.println("> ERRO: " + e.getMessage());
+                        }
+                    }
+                    break;
+                case "2":
+                    System.out.print("ID da Internacao: ");
+                    Internacao inter = hospital.getGerenciadorInternacoes().buscarPorId(scanner.nextLine());
+                    if (inter != null) {
+                        inter.setDataAlta(LocalDate.now());
+                        double vBase = inter.calcularValorPaciente();
+                        System.out.println("Valor base com plano: R$ " + vBase);
+                        System.out.println("Forma Pagamento: 1-PIX(-10%) 2-Parcelado(+8%) 3-Cartao Vista");
+                        int pg = Integer.parseInt(scanner.nextLine());
+                        double vFinal = hospital.getGerenciadorPagamentos().calcularValorFinal(vBase, pg);
+                        hospital.getGerenciadorPagamentos().registrarPagamento(inter, vFinal, "Opcao " + pg);
+                        hospital.salvarHospital("hospital.ser");
+                        System.out.println("> Alta concluida! Valor final: R$ " + vFinal);
+                    } else {
+                        System.out.println("> ERRO: Internacao nao encontrada.");
+                    }
+                    break;
+                case "3":
+                    noMenuInter = false;
                     break;
                 default:
                     System.out.println("Opcao invalida!");

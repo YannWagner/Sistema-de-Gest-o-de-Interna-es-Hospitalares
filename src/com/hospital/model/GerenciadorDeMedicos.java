@@ -1,8 +1,10 @@
 package com.hospital.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class GerenciadorDeMedicos {
+public class GerenciadorDeMedicos implements Serializable {
+    private static final long serialVersionUID = 1L;
     private ArrayList<Medico> medicos;
 
     public GerenciadorDeMedicos() {
