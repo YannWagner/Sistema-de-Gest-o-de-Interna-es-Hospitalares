@@ -1,4 +1,6 @@
-package com.hospital.model;
+package com.hospital.service;
+
+import com.hospital.model.Internacao;
 
 import java.io.Serializable;
 import java.io.PrintWriter;

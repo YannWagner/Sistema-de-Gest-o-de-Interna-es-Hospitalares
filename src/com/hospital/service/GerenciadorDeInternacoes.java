@@ -1,4 +1,9 @@
-package com.hospital.model;
+package com.hospital.service;
+
+import com.hospital.model.Internacao;
+import com.hospital.model.Medico;
+import com.hospital.model.Paciente;
+import com.hospital.model.TipoLeito;
 
 import java.io.Serializable;
 import java.time.LocalDate;

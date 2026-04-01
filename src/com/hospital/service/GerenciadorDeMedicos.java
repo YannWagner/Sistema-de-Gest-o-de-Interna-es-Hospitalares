@@ -1,4 +1,7 @@
-package com.hospital.model;
+package com.hospital.service;
+
+import com.hospital.model.Especialidade;
+import com.hospital.model.Medico;
 
 import java.io.Serializable;
 import java.util.ArrayList;

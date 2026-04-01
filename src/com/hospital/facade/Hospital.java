@@ -1,4 +1,10 @@
-package com.hospital.model;
+package com.hospital.facade;
+
+import com.hospital.util.Persistencia;
+import com.hospital.service.GerenciadorDeInternacoes;
+import com.hospital.service.GerenciadorDeMedicos;
+import com.hospital.service.GerenciadorDePacientes;
+import com.hospital.service.GerenciadorDePagamentos;
 
 import java.io.Serializable;
 

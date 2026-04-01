@@ -1,4 +1,5 @@
 package com.hospital.model;
+
 import java.io.Serializable;
 
 public class PlanoDeSaude implements Serializable {

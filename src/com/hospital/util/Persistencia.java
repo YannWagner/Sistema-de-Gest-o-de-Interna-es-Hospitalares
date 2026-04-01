@@ -1,4 +1,4 @@
-package com.hospital.model;
+package com.hospital.util;
 
 import java.io.*;
 

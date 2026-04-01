@@ -1,10 +1,15 @@
-package com.hospital.model;
+package com.hospital.main;
+
+import com.hospital.facade.Hospital;
+import com.hospital.model.*;
+import com.hospital.service.GerenciadorDeMedicos;
+import com.hospital.service.GerenciadorDePacientes;
 
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.time.LocalDate;
 
-public class MainTeste {
+public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
