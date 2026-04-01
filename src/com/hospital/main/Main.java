@@ -13,13 +13,13 @@ public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
-        // Tenta carregar os dados salvos anteriormente
+
         Hospital hospital = Hospital.carregarHospital("hospital.ser");
         if (hospital == null) {
             hospital = new Hospital();
         }
 
-        // Puxa os gerenciadores de dentro do Hospital (para persistência funcionar)
+
         GerenciadorDePacientes gerenciadorPacientes = hospital.getGerenciadorPacientes();
         GerenciadorDeMedicos gerenciadorMedicos = hospital.getGerenciadorMedicos();
 
@@ -99,7 +99,7 @@ public class Main {
 
                     try {
                         gerenciador.cadastrarPaciente(nome, cpf, telefone, plano);
-                        hospital.salvarHospital("hospital.ser"); // Salva alteração
+                        hospital.salvarHospital("hospital.ser");
                         System.out.println("> Paciente cadastrado com sucesso!");
                     } catch (IllegalArgumentException e) {
                         System.out.println("> ERRO: " + e.getMessage());
@@ -127,7 +127,7 @@ public class Main {
 
                     try {
                         gerenciador.atualizarPlanoDeSaude(cpfAtualizar, new PlanoDeSaude(novaOp, novoLeito, novaCopart));
-                        hospital.salvarHospital("hospital.ser"); // Salva alteração
+                        hospital.salvarHospital("hospital.ser");
                         System.out.println("> Plano atualizado!");
                     } catch (IllegalArgumentException e) {
                         System.out.println("> ERRO: " + e.getMessage());
@@ -183,7 +183,7 @@ public class Main {
 
                     try {
                         gerenciador.cadastrarMedico(nome, crm, especialidade);
-                        hospital.salvarHospital("hospital.ser"); // Salva alteração
+                        hospital.salvarHospital("hospital.ser");
                         System.out.println("> Medico cadastrado com sucesso!");
                     } catch (IllegalArgumentException e) {
                         System.out.println("> ERRO: " + e.getMessage());

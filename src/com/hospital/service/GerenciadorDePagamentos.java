@@ -19,11 +19,11 @@ public class GerenciadorDePagamentos implements Serializable {
 
     public double calcularValorFinal(double valorBase, int opcao) {
         if (opcao == 1) {
-            return valorBase * 0.90; // PIX ou Dinheiro (10% desconto)
+            return valorBase * 0.90;
         } else if (opcao == 2) {
-            return valorBase * 1.08; // Parcelado 3x (8% acréscimo)
+            return valorBase * 1.08;
         } else {
-            return valorBase; // Cartão à vista (valor exato)
+            return valorBase;
         }
     }
 
